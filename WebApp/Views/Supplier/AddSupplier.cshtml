@@ -1,0 +1,82 @@
+﻿@model COCOApp.Models.Supplier
+@{
+    Layout = "_LayoutStoreDashBoard";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm mới nhà cung cấp</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="~/Supplier/ViewList">Danh sách nhà cung cấp</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Thêm mới nhà cung cấp</li>
+            </ol>
+        </nav>
+        <form id="registerForm" asp-action="AddSupplier" method="post">
+            <div class="row bg-light rounded h-100 p-4">
+                <div>
+                    <h4 class="mb-4">Thêm mới nhà cung cấp</h4>
+                </div>
+                <div class="col-xl-6">
+                    <div class="bg-light rounded h-100 p-4">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Name" class="required"> Tên nhà cung cấp</label>
+                                <input asp-for="Name" class="form-control" placeholder="Nhập tên nhà cung cấp..." required />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Phone" class="required">Số điện thoại</label>
+                                <input asp-for="Phone" class="form-control" placeholder="Nhập số điện thoại..." required />
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Status" class="required">Trạng thái</label>
+                                <select asp-for="Status" class="form-select">
+                                    <option value="true">Đã kích hoạt</option>
+                                    <option value="false">Chưa kích hoạt</option>
+                                </select>
+                                <span asp-validation-for="Status" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="bg-light rounded h-100 p-4">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Address" class="required">Địa chỉ</label>
+                                <input asp-for="Address" class="form-control" placeholder="Nhập địa chỉ ..." required />
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Note">Ghi chú</label>
+                                <textarea asp-for="Note" class="form-control" placeholder="Nhập ghi chú ..."></textarea>
+                                <span asp-validation-for="Note" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <div class="bg-light rounded h-100 p-4 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary">Thêm</button>
+                    </div>
+                </div>
+            </div>
+            @Html.AntiForgeryToken()
+        </form>
+    </div>
+</body>
+</html>

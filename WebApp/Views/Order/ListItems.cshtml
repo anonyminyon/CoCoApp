@@ -1,0 +1,77 @@
+﻿@{
+    Layout = "_LayoutStoreDashBoard";
+    ViewData["Title"] = "Order List";
+    var getListUrl = Url.Action("GetOrderItemsList", "Order");
+    var currentPage = ViewData["PageNumber"] ?? 1;
+    var orderId = ViewData["OrderId"]; // Retrieve orderId from ViewData
+}
+@using System.Globalization
+@using System.Text.Json
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">Danh sách sản phẩm trong đơn hàng</li>
+            </ol>
+        </nav>
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-12">
+                <div class="bg-light rounded h-100 p-4">
+                    <div>
+                        <h4 class="mb-4">Danh sách sản phẩm trong đơn hàng</h4>
+                    </div>
+                    <div class="row g-4 input-group">
+                        <div class="col-sm-4">
+                            <input class="form-control border-0 nameQuery" type="search" name="nameQuery" placeholder="Tìm kiếm ...">
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-primary" onclick="search()">Tìm</button>
+                        </div>
+                    </div>
+                    <div class="g-4 input-group flex-nowrap justify-content-end">
+                        <a href="~/Order/Add" class="btn btn-sm btn-primary">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                    <div>
+                        <table class="table table-striped w-100 resultTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Mặt hàng</th>
+                                    <th scope="col">Số lượng</th>
+                                    <th scope="col">Số lượng thực xuất</th>
+                                    <th scope="col">Giá hàng</th>
+                                    <th scope="col">Tổng tiền</th>
+                                    <th scope="col">Hành động</th>
+                                    <th scope="col">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody class="resultTableBody">
+                                <!-- Dynamic content will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="g-4 input-group flex-nowrap justify-content-end paginationContainer">
+                        <div class="input-group flex-nowrap justify-content-end pe-3">
+                            <div class="pageNumber">1</div> /
+                            <div class="totalPages"></div>&nbsp;trang
+                        </div>
+                        <a onclick="prevPage()" class="prevPage pe-1"><i class="fas fa-chevron-left"></i></a>
+                        <a onclick="nextPage()" class="nextPage ps-1 pe-3"><i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @section Scripts {
+        <script>
+            var pageNumber = @currentPage;
+            var getListUrl = '@getListUrl';
+            var orderId=@orderId;
+        </script>
+        <script src="~/js/viewOrderItemsScript.js"></script>
+    }
+</body>
+</html>

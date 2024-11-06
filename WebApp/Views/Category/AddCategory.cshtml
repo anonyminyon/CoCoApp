@@ -1,0 +1,74 @@
+﻿@model COCOApp.Models.Category
+@{
+    ViewBag.Title = "Add Category";
+    Layout = "_LayoutStoreDashBoard";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>@ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+</head>
+<body>
+    <!-- Form Start -->
+    <div class="container-fluid pt-4 px-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="~/Category/ViewList">Danh sách danh mục</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Thêm danh mục</li>
+            </ol>
+        </nav>
+        @*<form asp-controller="Category" asp-action="AddCategory" method="post" class="bg-light rounded p-4 shadow-sm">*@
+        <form id="registerForm" asp-action="AddCategory" method="post" class="bg-light rounded p-4 shadow-sm">
+            <div class="row">
+                <div class="col">
+                    <div>
+                        <h4 class="mb-4">Thêm mới danh mục</h4>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-xl-12">
+                    <div class="bg-light rounded h-100 p-4">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="CategoryName" class="required">Tên danh mục</label>
+                                <input asp-for="CategoryName" class="form-control" placeholder="Nhập tên danh mục..." required />
+                                <span asp-validation-for="CategoryName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Description">Mô tả</label>
+                                <textarea asp-for="Description" class="form-control" placeholder="Nhập mô tả..." rows="3"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="form-group">
+                                <label asp-for="Status" class="required">Trạng thái</label>
+                                <select asp-for="Status" class="form-select">
+                                    <option value="true">Đã kích hoạt</option>
+                                    <option value="false">Chưa kích hoạt</option>
+                                </select>
+                                <span asp-validation-for="Status" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <div class="bg-light rounded h-100 p-4 text-center">
+                        <button type="submit" class="btn btn-primary">Thêm mới</button>
+                        <a href="@Url.Action("ViewList", "Category")" class="btn btn-danger">Quay lại</a>
+                    </div>
+                </div>
+            </div>
+            @Html.AntiForgeryToken()
+        </form>
+    </div>
+    <!-- Form End -->
+</body>
+</html>

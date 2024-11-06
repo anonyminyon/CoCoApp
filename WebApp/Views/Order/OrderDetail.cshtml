@@ -1,0 +1,76 @@
+﻿@model COCOApp.Models.ExportOrder
+@{
+    Layout = "_LayoutStoreDashBoard";
+    var currentPage = ViewData["PageNumber"] ?? 1;
+}
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <!-- Form Start -->
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="~/Order/ViewList">Danh sách đơn hàng</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Thông tin đơn hàng</li>
+            </ol>
+        </nav>
+        <form id="registerForm" action="" method="post">
+            <div class="row">
+                <div class="col">
+                    <div>
+                        <h4 class="mb-4">Thông tin đơn hàng</h4>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-xl-12">
+                    <div class="bg-light rounded h-100 p-4">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Customer.Name" class="required"> Tên khách hàng</label>
+                                <input asp-for="Customer.Name" class="form-control" placeholder="Nhập tên hàng..." disabled>
+                                <span asp-validation-for="Customer.Name" class="text-danger"></span>
+                            </div>
+                        </div>
+@*                          <div class="mb-3">
+                             <div class="form-group">
+                                 <label asp-for="Product.ProductName" class="required">Mặt hàng </label>
+                                 <input asp-for="Product.ProductName" class="form-control" placeholder="Nhập đơn vị tính..." disabled>
+                                 <span asp-validation-for="Product.ProductName" class="text-danger"></span>
+                             </div>
+                         </div>
+                         <div class="mb-3">
+                             <div class="form-group">
+                                 <label asp-for="Volume" class="required"> Số lượng</label>
+                                 <input asp-for="Volume" class="form-control" placeholder="Nhập giá bán..." disabled>
+                                 <span asp-validation-for="Volume" class="text-danger"></span>
+                             </div>
+                         </div> *@
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="OrderDate" class="required">Ngày mua</label>
+                                <input asp-for="OrderDate" class="form-control" type="date" asp-format="{0:yyyy-MM-dd}" disabled>
+                                <span asp-validation-for="OrderDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <div class="bg-light rounded h-100 p-4 text-center">
+                        <a href="@Url.Action("ViewEdit", "Order", new { orderId = Model.Id, pageNumber = currentPage })" class="btn btn-primary">Đến trang chỉnh sửa</a>
+                        <a href="@Url.Action("ViewList", "Order", new { pageNumber = currentPage })" class="btn btn-danger">Quay lại</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- Form End -->
+    <!-- Content End -->
+    @section Scripts {
+        <script>
+            var pageNumber = @currentPage;
+        </script>
+    }
+</body>
+</html>

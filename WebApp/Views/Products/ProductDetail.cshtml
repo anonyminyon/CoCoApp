@@ -1,0 +1,95 @@
+﻿@model COCOApp.Models.Product
+@{
+    Layout = "_LayoutStoreDashBoard";
+    var currentPage = ViewData["PageNumber"] ?? 1;
+}
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <!-- Form Start -->
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="@Url.Action("ViewList", "Product", new { pageNumber = currentPage })">Danh sách hàng hóa</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Thông tin hàng hóa</li>
+            </ol>
+        </nav>
+        <form id="registerForm" action="" method="post">
+            <div class="row">
+                <div class="col">
+                    <div>
+                        <h4 class="mb-4">Thông tin hàng hóa</h4>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-xl-12">
+                    <div class="bg-light rounded h-100 p-4">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="ProductName" class="required"> Tên hàng</label>
+                                <input asp-for="ProductName" class="form-control" placeholder="Nhập tên hàng..." disabled>
+                                <span asp-validation-for="ProductName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="MeasureUnit" class="required"> Đơn vị tính</label>
+                                <input asp-for="MeasureUnit" class="form-control" placeholder="Nhập đơn vị tính..." disabled>
+                                <span asp-validation-for="MeasureUnit" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Cost" class="required"> Giá bán</label>
+                                <input asp-for="Cost" class="form-control" placeholder="Nhập giá bán..." disabled>
+                                <span asp-validation-for="Cost" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="@Model.CategoryId" class="control-label">Chọn danh mục sản phẩm</label>
+                                <select asp-for="@Model.CategoryId" class="form-select select2" asp-items="ViewBag.Categories" disabled>
+                                    <option value="">-- Chọn danh mục sản phẩm --</option>
+                                </select>
+                                <span asp-validation-for="CategoryId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Status" class="required">Trạng thái</label>
+                                <select asp-for="Status" class="form-select" disabled>
+                                    @if (Model.Status)
+                                    {
+                                        <option value="true" selected>Đã kích hoạt</option>
+                                        <option value="false">Chưa kích hoạt</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="true">Đã kích hoạt</option>
+                                        <option value="false" selected>Chưa kích hoạt</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="Status" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <div class="bg-light rounded h-100 p-4 text-center">
+                        <a href="@Url.Action("ViewEdit", "Product", new { productId = Model.Id, pageNumber = currentPage })" class="btn btn-primary">Đến trang chỉnh sửa</a>
+                        <a href="@Url.Action("ViewList", "Product", new { pageNumber = currentPage })" class="btn btn-danger">Quay lại</a>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="PageNumber" value="@currentPage" />
+        </form>
+    </div>
+    <!-- Form End -->
+    @section Scripts {
+        <script>
+            var pageNumber = @currentPage;
+        </script>
+    }
+</body>
+</html>

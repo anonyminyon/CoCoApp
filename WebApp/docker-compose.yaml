@@ -1,0 +1,47 @@
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Hihihaha123@
+    ports:
+      - "1433:1433"
+    networks:
+      - db_net
+  sqlcmd:
+    image: mcr.microsoft.com/mssql-tools:latest
+    command:
+      - /bin/bash
+      - -c
+      - |
+        # Chờ SQL Server sẵn sàng
+        until /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P Hihihaha123@ -Q 'SELECT 1' > /dev/null 2>&1; do
+          echo 'Waiting for SQL Server to be available...'
+          sleep 5
+        done
+        # Thực thi các script SQL
+        /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P Hihihaha123@ -d master -i /opt/mssql_scripts/Coco.sql
+    stdin_open: true
+    volumes:
+      - ./sqlscripts:/opt/mssql_scripts
+    networks:
+      - db_net
+  app:
+    image: coco_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=StoreManager;User Id=sa;Password=Hihihaha123@;TrustServerCertificate=True
+    depends_on:
+      - sqlserver
+    networks:
+      - db_net
+networks:
+  db_net:
+    name: db_net
+

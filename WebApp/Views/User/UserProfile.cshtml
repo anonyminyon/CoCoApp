@@ -1,0 +1,135 @@
+﻿@model COCOApp.Models.User
+@{
+    Layout = "_LayoutStoreDashBoard";
+    // Check if image data exists and convert it to a base64 string
+    string base64Image = string.Empty;
+    if (Model.SellerDetail?.ImageData != null)
+    {
+        base64Image = "data:image/png;base64," + Convert.ToBase64String(Model.SellerDetail.ImageData);
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin cá nhân</title>
+    <link rel="stylesheet" href="~/css/profilestyle.css">
+</head>
+
+<body>
+    <div class="container light-style flex-grow-1 container-p-y">
+        <h4 class="font-weight-bold py-3 mb-4">
+            Thông tin cá nhân
+        </h4>
+        <!-- Make sure to add enctype="multipart/form-data" to allow file uploads -->
+        <form asp-controller="User" asp-action="UpdateUser" method="post" enctype="multipart/form-data">
+            <input type="text" name="id" class="form-control" value="@Model.Id" hidden>
+            <input type="text" name="password" class="form-control" value="test1234" hidden>
+            <div class="card overflow-hidden">
+                <div class="row no-gutters row-bordered row-border-light">
+                    <div class="col-md-3 pt-0">
+                        <div class="list-group list-group-flush account-settings-links">
+                            <a class="list-group-item list-group-item-action active" data-bs-toggle="list"
+                               href="#account-general">Thông tin chung</a>
+                            <a class="list-group-item list-group-item-action" data-bs-toggle="list"
+                               href="#account-info">Thông tin chi tiết</a>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="tab-content">
+                            <div class="tab-pane fade active show" id="account-general">
+                                <hr class="border-light m-0">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label asp-for="Username" class="required"> Tên tài khoản</label>
+                                        <input asp-for="Username" class="form-control" placeholder="Nhập tên tài khoản..." required>
+                                        <span asp-validation-for="Username" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="UserDetail.Fullname" class="required"> Họ và tên</label>
+                                        <input asp-for="UserDetail.Fullname" class="form-control" placeholder="Nhập tên ..." required>
+                                        <span asp-validation-for="UserDetail.Fullname" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Email" class="required"> E-mail</label>
+                                        <input asp-for="Email" class="form-control" placeholder="Nhập email ..." required readonly>
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="SellerDetail.BusinessName" class="required"> Tên cửa hàng</label>
+                                        <input asp-for="SellerDetail.BusinessName" class="form-control" placeholder="Nhập tên cửa hàng ..." required >
+                                        <span asp-validation-for="SellerDetail.BusinessName" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="SellerDetail.BusinessAddress" class="required"> Địa chỉ cửa hàng</label>
+                                        <input asp-for="SellerDetail.BusinessAddress" class="form-control" placeholder="Nhập địa chỉ cửa hàng ..." required >
+                                        <span asp-validation-for="SellerDetail.BusinessAddress" class="text-danger"></span>
+                                    </div>
+                                    <!-- Image upload -->
+                                    <div class="form-group">
+                                        <label for="imageUpload">Tải lên hình ảnh mã QR của tài khoản ngân hàng</label>
+                                        <input type="file" class="form-control" id="imageUpload" name="ImageFile" accept="image/*">
+                                    </div>
+
+                                    <!-- Display existing image if it exists -->
+                                    @if (!string.IsNullOrEmpty(base64Image))
+                                    {
+                                        <div class="form-group">
+                                            <label>Ảnh đã tải lên</label><br />
+                                            <img src="@base64Image" alt="Uploaded Image" style="max-width: 400px; max-height: 400px;" />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="account-info">
+                                <div class="card-body pb-2">
+                                    <div class="form-group">
+                                        <label asp-for="UserDetail.Dob" class="required">Ngày sinh</label>
+                                        <input asp-for="UserDetail.Dob" class="form-control" type="date" asp-format="{0:yyyy-MM-dd}" required>
+                                        <span asp-validation-for="UserDetail.Dob" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="UserDetail.Gender" class="required">Giới tính</label>
+                                        <select asp-for="UserDetail.Gender" class="form-select">
+                                            @if (Model.UserDetail.Gender)
+                                            {
+                                                <option value="true" selected>Nam</option>
+                                                <option value="false">Nữ</option>
+                                            }
+                                            else if (!Model.UserDetail.Gender)
+                                            {
+                                                <option value="true">Nam</option>
+                                                <option value="false" selected>Nữ</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="UserDetail.Gender" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="UserDetail.Address" class="required"> Địa chỉ nhà</label>
+                                        <input asp-for="UserDetail.Address" class="form-control" placeholder="Nhập Địa chỉ nhà ..." required>
+                                        <span asp-validation-for="UserDetail.Address" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="UserDetail.Phone" class="required"> Số điện thoại</label>
+                                        <input asp-for="UserDetail.Phone" class="form-control" placeholder="Nhập Số điện thoại ..." required>
+                                        <span asp-validation-for="UserDetail.Phone" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="border-light m-0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-100"></div>
+            <div class="col">
+                <div class="bgrow bg-light rounded h-100 p-4 align-items-center">
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

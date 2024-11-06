@@ -1,0 +1,92 @@
+﻿@model COCOApp.Models.ImportOrderItem
+@{
+    Layout = "_LayoutStoreDashBoard";
+    var currentPage = ViewData["PageNumber"] ?? 1;
+}
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <!-- Form Start -->
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="~/Order/ViewList">Danh sách đơn hàng nhập</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Sửa thông tin đơn hàng nhập</li>
+            </ol>
+        </nav>
+        <form id="registerForm" asp-action="EditOrderItem" method="post">
+            <input type="text" name="OrderId" class="form-control" value="@Model.OrderId" hidden>
+            <input type="text" name="ProductId" class="form-control" value="@Model.ProductId" hidden>
+            <input type="number" name="OrderProductCost" class="form-control" value=10 hidden>
+            <input type="number" name="OrderTotal" class="form-control" value=10 hidden>
+            <div class="row">
+                <div class="col">
+                    <div>
+                        <h4 class="mb-4">Thông tin đơn hàng nhập chi tiết</h4>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-xl-12">
+                    <div class="bg-light rounded h-100 p-4">
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="ProductId" class="required">Mặt hàng </label>
+                                <select asp-for="ProductId" class="form-control select2" disabled>
+                                    @foreach (var product in ViewBag.Products)
+                                    {
+                                        <option value="@product.Value">@product.Text</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="ProductId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="ProductCost" class="required"> Giá sản phẩm</label>
+                                <input asp-for="ProductCost" class="form-control" placeholder="Nhập giá giá sản phẩm..." required>
+                                <span asp-validation-for="ProductCost" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="Volume" class="required"> Số lượng</label>
+                                <input asp-for="Volume" class="form-control" placeholder="Nhập giá bán..." required>
+                                <span asp-validation-for="Volume" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-group">
+                                <label asp-for="RealVolume" class="required"> Số lượng nhập thực</label>
+                                <input asp-for="RealVolume" class="form-control" placeholder="Nhập giá bán..." required>
+                                <span asp-validation-for="RealVolume" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <div class="bg-light rounded h-100 p-4 text-center">
+                        <button type="submit" class="btn btn-primary">Chỉnh sửa</button>
+                        <a href="@Url.Action("ViewList", "ImportOrder", new { pageNumber = currentPage })" class="btn btn-danger">Quay lại</a>
+                    </div>
+                </div>
+            </div>
+            @Html.AntiForgeryToken()
+        </form>
+    </div>
+    <!-- Form End -->
+    <!-- Content End -->
+    @section Scripts {
+        <script>
+            var pageNumber = @currentPage;
+            $(document).ready(function () {
+                // Initialize select2 for existing select fields
+                $('.select2').select2({
+                    placeholder: 'Chọn một trong danh sách',
+                    allowClear: true // Optional: Add this if you want a clear button
+                });
+            });
+        </script>
+    }
+</body>
+</html>

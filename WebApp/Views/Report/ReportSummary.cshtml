@@ -1,0 +1,101 @@
+﻿@model List<COCOApp.Models.ReportDetail>
+@{
+    Layout = "_LayoutStoreDashBoard";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary</title>
+</head>
+<body>
+    <!-- Form Start -->
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="~/Report/ViewCreate">Tạo hóa đơn</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Giá hóa đơn</li>
+            </ol>
+        </nav>
+        <form asp-controller="Report" asp-action="Print" method="post" target="_blank" id="summaryForm">
+            <div class="row bg-light rounded h-100 p-4">
+                <div>
+                    @if (Model == null || Model.Count == 0)
+                    {
+                        <p>Không có đơn hàng nào</p>
+                    }
+                    else
+                    {
+                        <table class="table table-striped w-100 resultTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Sản phẩm</th>
+                                    <th scope="col">Số lượng</th>
+                                    <th scope="col">Giá</th>
+                                    <th scope="col">Tổng giá</th>
+                                </tr>
+                            </thead>
+                            <tbody class="resultTableBody">
+                                @for (int i = 0; i < Model.Count; i++)
+                                {
+                                    <tr>
+                                        <!-- Hidden input for Report ID -->
+                                        <input type="hidden" name="[@i].ReportId" value="@Model[i].ReportId" />
+                                        <td>
+                                            @Model[i].Product.ProductName
+                                            <!-- Hidden fields to send the product ID and name -->
+                                            <input type="hidden" name="[@i].ProductId" value="@Model[i].ProductId" />
+                                            <input type="hidden" name="[@i].Product.ProductName" value="@Model[i].Product.ProductName" />
+                                            <input type="hidden" name="[@i].Product.MeasureUnit" value="@Model[i].Product.MeasureUnit" />
+                                        </td>
+                                        <td>
+                                            <!-- Read-only quantity field -->
+                                            <input type="number" name="[@i].Volume" value="@Model[i].Volume" class="form-control" min="1" readonly />
+                                        </td>
+                                        <td>
+                                            <!-- Editable price field -->
+                                            <input type="number" name="[@i].Product.Cost" value="@Model[i].Product.Cost" class="form-control" step="0.01" />
+                                        </td>
+                                        <td>
+                                            <!-- Read-only total price field -->
+                                            <input type="number" name="[@i].TotalPrice" value="@Model[i].TotalPrice" class="form-control" step="0.01" readonly />
+                                        </td>
+                                        <!-- Hidden input for Report order date -->
+                                        <input type="hidden" name="[@i].OrderDate" value="@Model[i].OrderDate" />
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <div class="bgrow bg-light rounded h-100 p-4 align-items-center">
+                        <button type="submit" class="btn btn-primary">Tạo tổng kết</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- Form End -->
+    <!-- Content End -->
+    @section Scripts {
+        <!-- Optional JS if you want to dynamically update the total price -->
+        <script>
+            document.querySelectorAll('input[name$=".Product.Cost"]').forEach(input => {
+                input.addEventListener('input', function () {
+                    const row = input.closest('tr');
+                    const volumeInput = row.querySelector('input[name$=".Volume"]');
+                    const totalPriceInput = row.querySelector('input[name$=".TotalPrice"]');
+
+                    const volume = parseFloat(volumeInput.value) || 0;
+                    const price = parseFloat(input.value) || 0;
+
+                    totalPriceInput.value = (volume * price).toFixed(2);
+                });
+            });
+        </script>
+    }
+</body>
+</html>

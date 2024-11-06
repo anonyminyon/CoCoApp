@@ -1,0 +1,94 @@
+﻿@model DashboardViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_LayoutStoreDashBoard";
+}
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form asp-action="Index" method="get" class="form-inline">
+            <select asp-for="SelectedTimeRange" name="timeRange" class="form-control mr-2" onchange="this.form.submit()">
+                <option value="day">1 ngày</option>
+                <option value="week">1 tuần</option>
+                <option value="month">1 tháng</option>
+            </select>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Doanh thu dự kiến</h2>
+        <canvas id="revenueChart"></canvas>
+    </div>
+    <div class="col-md-6">
+        <h2>Chi tiết doanh thu</h2>
+        <table id="productTable" class="table">
+            <thead>
+                <tr>
+                    <th>Mặt hàng</th>
+                    <th>Số lượng</th>
+                    <th>Doanh thu</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var stat in Model.ProductStatistics)
+                {
+                    <tr>
+                        <td>@stat.ProductName</td>
+                        <td>@stat.Quantity</td>
+                        <td>@stat.Revenue.ToString("N0") VND</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="2">Tổng cộng</th>
+                    <th>@Model.TotalRevenue.ToString("N0") VND</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" />
+    <script>
+        var ctx = document.getElementById('revenueChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [@Html.Raw(string.Join(",", Model.ProductStatistics.Select(s => $"'{s.ProductName}'")))],
+                datasets: [{
+                    data: [@string.Join(",", Model.ProductStatistics.Select(s => s.Revenue))],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(153, 102, 255, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Doanh thu dự kiến'
+                }
+            }
+        });
+
+        $(document).ready(function() {
+            $('#productTable').DataTable({
+                "order": [[2, "desc"]], // Sắp xếp theo cột doanh thu (index 2) giảm dần
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Vietnamese.json"
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,79 @@
+﻿@model COCOApp.Models.Product
+@{
+    Layout = "_LayoutStoreDashBoard";
+}
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <!-- Form Start -->
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="~/Product/ViewList">Danh sách hàng hóa</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Thêm mới hàng hóa</li>
+            </ol>
+        </nav>
+        <form asp-controller="Product" asp-action="AddProduct" method="post" class="bg-light rounded p-4 shadow-sm">
+            <div class="row">
+                <div class="col-12">
+                    <h4 class="mb-4">Thêm mới hàng hóa</h4>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label asp-for="ProductName" class="required">Tên hàng</label>
+                        <input asp-for="ProductName" class="form-control" placeholder="Nhập tên hàng..." required>
+                        <span asp-validation-for="ProductName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label asp-for="MeasureUnit" class="required">Đơn vị tính</label>
+                        <input asp-for="MeasureUnit" class="form-control" placeholder="Nhập đơn vị tính..." required>
+                        <span asp-validation-for="MeasureUnit" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label asp-for="@Model.CategoryId" class="control-label">Chọn danh mục sản phẩm</label>
+                        <select asp-for="@Model.CategoryId" class="form-select select2" asp-items="ViewBag.Categories" required>
+                            <option value="">-- Chọn danh mục sản phẩm --</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label asp-for="Cost" class="required">Giá bán</label>
+                        <input asp-for="Cost" class="form-control" placeholder="Nhập giá bán..." min="1" max="9999999" required>
+                        <span asp-validation-for="Cost" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label asp-for="Status" class="required">Trạng thái</label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="true">Đã kích hoạt</option>
+                            <option value="false">Chưa kích hoạt</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-12 text-right">
+                    <button type="submit" class="btn btn-primary">Thêm</button>
+                </div>
+            </div>
+            @Html.AntiForgeryToken()
+        </form>
+    </div>
+    <!-- Form End -->
+    <!-- Content End -->
+    @section Scripts {
+        <script>
+            // Initialize Select2 on document ready
+            $(document).ready(function () {
+                $('.select2').select2();
+            });
+        </script>
+    }
+</body>
+</html>

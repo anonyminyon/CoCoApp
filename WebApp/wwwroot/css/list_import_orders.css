@@ -1,0 +1,111 @@
+﻿/* General styling for container */
+.container-fluid {
+    padding: 30px;
+    background-color: #f9fafb;
+}
+
+/* Breadcrumb styling */
+.breadcrumb {
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.breadcrumb-item {
+    font-weight: 500;
+}
+
+.breadcrumb-item.active {
+    color: #6c757d;
+}
+
+/* Heading styling */
+h4.mb-4 {
+    font-size: 24px;
+    color: #343a40;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Input group styling */
+.input-group {
+    margin-bottom: 20px;
+}
+
+input.form-control {
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s ease;
+}
+
+input.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+/* Button styling */
+.btn-primary {
+    padding: 10px 16px;
+    font-size: 16px;
+    font-weight: 500;
+    background-color: #007bff;
+    border-color: #007bff;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Table styling */
+.table {
+    width: 100%;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.table th, .table td {
+    padding: 12px 15px;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+/* Pagination styling */
+.paginationContainer {
+    margin-top: 20px;
+}
+
+.pageNumber, .totalPages {
+    font-size: 16px;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.prevPage, .nextPage {
+    color: #007bff;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.prevPage:hover, .nextPage:hover {
+    color: #0056b3;
+}

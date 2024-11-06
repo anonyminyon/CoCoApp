@@ -1,0 +1,231 @@
+﻿@model List<COCOApp.Models.ExportOrder>
+@using COCOApp.Models
+@{
+    Layout = "_LayoutStoreDashBoard";
+    var getListUrl = Url.Action("GetOrderItemsListNoPaging", "Order");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary</title>
+    <style>
+        /* Hide the checkbox column */
+        .resultTable thead th:first-child,
+        .resultTable tbody td:first-child {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Form Start -->
+    <div class="container-fluid">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">Tạo hóa đơn</li>
+            </ol>
+        </nav>
+        <form asp-controller="Report" asp-action="GetOrders" method="get">
+            <div class="col-12 mb-3">
+                <div class="bg-light rounded h-100 p-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="topSelectCustomer" class="form-label">Chọn khách hàng</label>
+                                <select id="topSelectCustomer" class="form-control select2" name="customerId">
+                                    @foreach (var customer in ViewBag.Customers)
+                                    {
+                                        <option value="@customer.Value">@customer.Text</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="topSelectOrderDate" class="form-label">Chọn khoảng thời gian</label>
+                                <input type="text" class="form-control" name="daterange" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="bgrow bg-light rounded h-100 p-4 align-items-center">
+                                <button type="submit" class="btn btn-primary">Xem thống kê</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+            <div class="bgrow bg-light rounded h-100 p-4 align-items-center">
+
+                <a href ="~/Dashboard/Index" type="button" class="btn btn-primary">Xem doanh thu</a>
+
+            </div>
+        <form asp-controller="Report" asp-action="CreateSummary" method="post" id="summaryForm">
+            <div class="row bg-light rounded h-100 p-4">
+                <div>
+                    @if (Model == null || Model.Count == 0)
+                    {
+                        <p>Không có đơn hàng nào</p>
+                    }
+                    else
+                    {
+
+                        <table class="table table-striped w-100 resultTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col"><input type="checkbox" id="selectAllCheckbox" checked hidden></th>
+                                    <th scope="col">Mã đơn hàng</th>
+                                    <th scope="col">Ngày mua</th>
+                                    <th scope="col">Thông tin đơn hàng</th>
+                                </tr>
+                            </thead>
+                            <tbody class="resultTableBody">
+                                @foreach (ExportOrder o in Model)
+                                {
+                                    <tr>
+                                        <td><input type="checkbox" class="orderCheckbox" data-order-id="@o.Id" checked hidden></td>
+                                        <td>@o.Id</td>
+                                        <td>@o.OrderDate</td>
+                                        <td><button type="button" class="btn btn-primary viewOrderDetailsBtn" data-order-id="@o.Id"><i class="fas fa-info-circle"></i></button></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    }
+                </div>
+                <div class="w-100"></div>
+                <div class="col">
+                    <div class="bgrow bg-light rounded h-100 p-4 align-items-center">
+                        <button type="submit" class="btn btn-primary">Tạo tổng kết</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- Form End -->
+    <!-- Order Details Modal -->
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderDetailsModalLabel">Thông tin chi tiết đơn hàng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Order Details Table -->
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">Mặt hàng</th>
+                                <th scope="col">Số lượng</th>
+                                <th scope="col">Giá hàng</th>
+                                <th scope="col">Tổng tiền</th>
+                                <th scope="col">Cập nhật ngày</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderItemsTableBody">
+                            <!-- Dynamic content will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content End -->
+    @section Scripts {
+        <script>
+            $(document).ready(function () {
+                $('.select2').select2({
+                    placeholder: 'Chọn một trong danh sách',
+                    allowClear: true // Optional: Add this if you want a clear button
+                });
+
+                $('input[name="daterange"]').daterangepicker({
+                    opens: 'left'
+                }, function (start, end, label) {
+                    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+                });
+
+                // Handle select all checkbox
+                $('#selectAllCheckbox').change(function () {
+                    $('.orderCheckbox').prop('checked', $(this).prop('checked'));
+                });
+
+                // If all checkboxes are checked, the main checkbox should be checked too
+                $('.orderCheckbox').change(function () {
+                    if ($('.orderCheckbox:checked').length == $('.orderCheckbox').length) {
+                        $('#selectAllCheckbox').prop('checked', true);
+                    } else {
+                        $('#selectAllCheckbox').prop('checked', false);
+                    }
+                });
+
+                // Handle form submission to include only checked orders
+                $('#summaryForm').submit(function (event) {
+                    // Remove any previous hidden inputs
+                    $('#summaryForm input[type="hidden"]').remove();
+
+                    // Add hidden inputs for checked order IDs
+                    $('.orderCheckbox:checked').each(function () {
+                        var orderId = $(this).data('order-id');
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: 'orderIds',
+                            value: orderId
+                        }).appendTo('#summaryForm');
+                    });
+                });
+            });
+            // Handle order details modal
+            $('.viewOrderDetailsBtn').click(function () {
+                var orderId = $(this).data('order-id');
+                var getListUrl = '@getListUrl';
+                // AJAX call to fetch order items
+                $.ajax({
+                    url: getListUrl, // Replace with your server-side URL to get order details
+                    type: 'GET',
+                    data: { orderId: orderId }, // Pass the order ID to the server
+                    success: function (data) {
+                        generateOrderItemsTable(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching order details: ", error);
+                        alert("Failed to fetch order details. Please try again.");
+                    }
+                });
+            });
+            function generateOrderItemsTable(data) {
+                // Clear the previous content
+                $('#orderItemsTableBody').empty();
+
+                // Check if there is no data
+                if (data.orderResults.length === 0) {
+                    $('#orderItemsTableBody').append('<tr><td colspan="7"><p>No result found</p></td></tr>');
+                    return;
+                }
+
+                // Iterate over the user results and create table rows
+                $.each(data.orderResults, function (index, orderItem) {
+                    const row = $('<tr>');
+                    row.append($('<td>').text(orderItem.product.productName));
+                    row.append($('<td>').text(orderItem.realVolume));
+                    row.append($('<td>').text(orderItem.productPrice));
+                    row.append($('<td>').text(orderItem.total));
+                    row.append($('<td>').text(orderItem.updatedAt));
+
+                    $('#orderItemsTableBody').append(row);
+                    // Show the modal
+                    $('#orderDetailsModal').modal('show');
+                });
+
+            }
+        </script>
+    }
+</body>
+</html>
